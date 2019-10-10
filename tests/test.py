@@ -28,7 +28,7 @@ def test_swagger():
 
     json = r.json()
     assert 'swagger' in json
-    assert json.get('info') and json.get('info').get('title') == 'Model Asset Exchange Server'
+    assert json.get('info') and json.get('info').get('title') == 'MAX MNIST-Digit Recognition'
 
 
 def test_metadata():
@@ -39,26 +39,28 @@ def test_metadata():
     assert r.status_code == 200
 
     metadata = r.json()
-    assert metadata['id'] == 'ADD IN MODEL ID'
-    assert metadata['name'] == 'ADD MODEL NAME'
-    assert metadata['description'] == 'ADD MODEL DESCRIPTION'
-    assert metadata['license'] == 'ADD MODEL LICENSE'
+    assert metadata['id'] == 'Image Classification'
+    assert metadata['name'] == 'MAX-MNIST'
+    assert metadata['description'] == 'Classify digits'
+    assert metadata['license'] == 'Apache 2.0'
 
 
 def test_response():
     model_endpoint = 'http://localhost:5000/model/predict'
-    file_path = 'samples/SAMPLE_FILE.jpg'
+    file_path = 'samples/image0.jpeg'
 
     with open(file_path, 'rb') as file:
-        file_form = {'image': (file_path, file, 'image/jpeg')}
+        file_form = {'file': (file_path, file, 'image/jpeg')}
         r = requests.post(url=model_endpoint, files=file_form)
 
+    print(r.content)
     assert r.status_code == 200
     response = r.json()
 
     assert response['status'] == 'ok'
 
     # add sanity checks here
+    assert response['predictions'][0]['prediction'] == 8
 
 
 if __name__ == '__main__':

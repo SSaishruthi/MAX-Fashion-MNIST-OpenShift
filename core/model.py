@@ -16,6 +16,12 @@
 
 from maxfw.model import MAXModelWrapper
 
+from PIL import Image
+import numpy as np
+import io
+import tensorflow as tf
+from tensorflow.python.keras.backend import set_session
+
 import logging
 from config import DEFAULT_MODEL_PATH
 
@@ -25,28 +31,47 @@ logger = logging.getLogger()
 class ModelWrapper(MAXModelWrapper):
 
     MODEL_META_DATA = {
-        'id': 'ID',
-        'name': 'MODEL NAME',
-        'description': 'DESCRIPTION',
-        'type': 'MODEL TYPE',
-        'source': 'MODEL SOURCE',
-        'license': 'LICENSE'
+        'id': 'Image Classification',
+        'name': 'MAX-MNIST',
+        'description': 'Classify cloths',
+        'type': 'Keras model',
+        'source': 'https://github.com/SSaishruthi/max_mnist',
+        'license': 'Apache 2.0'
     }
 
     def __init__(self, path=DEFAULT_MODEL_PATH):
         logger.info('Loading model from: {}...'.format(path))
-
         # Load the graph
-
-        # Set up instance variables and required inputs for inference
-
+        global sess
+        global graph
+        sess = tf.Session()
+        graph = tf.get_default_graph()
+        set_session(sess)
+        self.model = tf.keras.models.load_model(path)
         logger.info('Loaded model')
 
     def _pre_process(self, inp):
-        return inp
+        # Open the input image
+        img = Image.open(io.BytesIO(inp))
+        print('reading image..', img.size)
+        # Convert the PIL image instance into numpy array and
+        # get in proper dimension.
+        image = tf.keras.preprocessing.image.img_to_array(img)
+        print('image array shape..', image.shape)
+        image = np.expand_dims(image, axis=0)
+        print('image array shape..', image.shape)
+        return image
 
     def _post_process(self, result):
-        return result
+        # Extract prediction probability using `amax` and
+        # digit prediction using `argmax`
+        return [{'probability': np.amax(result),
+                 'prediction': np.argmax(result)}]
 
     def _predict(self, x):
-        return x
+        print('prediction')
+        with graph.as_default():
+            set_session(sess)
+            predict_result = self.model.predict(x)
+            print(predict_result)
+            return predict_result

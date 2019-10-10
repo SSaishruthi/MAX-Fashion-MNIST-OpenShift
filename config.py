@@ -22,10 +22,9 @@ RESTPLUS_MASK_SWAGGER = False
 SWAGGER_UI_DOC_EXPANSION = 'none'
 
 # API metadata
-API_TITLE = 'MAX'
-API_DESC = 'An API for serving models'
+API_TITLE = 'MAX FASHION MNIST - Cloth Classification'
+API_DESC = 'Classify cloths in the image'
 API_VERSION = '0.1'
 
-# default model
-MODEL_NAME = ''
-DEFAULT_MODEL_PATH = 'assets/{}'.format(MODEL_NAME)
+# Default model
+DEFAULT_MODEL_PATH = 'assets/fashion_mnist.h5'

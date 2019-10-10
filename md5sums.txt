@@ -1,1 +1,1 @@
-ffffffffffffffffffffffffffffffff  assets/MODEL_WEIGHTS.h5
+097e9629cb300eb40ac29743cc668f37  assets/model_structure.h5
