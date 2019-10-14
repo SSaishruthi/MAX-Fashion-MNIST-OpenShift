@@ -41,7 +41,7 @@ def test_metadata():
     metadata = r.json()
     assert metadata['id'] == 'Image Classification'
     assert metadata['name'] == 'MAX-Fashion-MNIST'
-    assert metadata['description'] == 'Classify clothing and fashion items''
+    assert metadata['description'] == 'Classify clothing and fashion items'
     assert metadata['license'] == 'Apache 2.0'
 
 
