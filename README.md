@@ -10,7 +10,7 @@ Classify fashion and clothing items.
 
 [Data Asset Exchange](https://developer.ibm.com/exchanges/data/)
 
-Curated free and open datasets under open data licensesfor enterprise data science.
+Curated free and open datasets under open data licenses for enterprise data science.
 
 Link to download: https://developer.ibm.com/exchanges/data/all/fashion-mnist/
 
