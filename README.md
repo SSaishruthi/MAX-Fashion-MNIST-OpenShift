@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/SSaishruthi/max_mnist.svg?branch=master)](https://travis-ci.org/SSaishruthi/max_mnist)
+[![Build Status](https://travis-ci.org/SSaishruthi/max-fashion-mnist.svg?branch=master)](https://travis-ci.org/SSaishruthi/max-fashion-mnist)
 
 # MAX-Fashion-MNIST
 
