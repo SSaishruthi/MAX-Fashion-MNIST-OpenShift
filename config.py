@@ -22,7 +22,7 @@ RESTPLUS_MASK_SWAGGER = False
 SWAGGER_UI_DOC_EXPANSION = 'none'
 
 # API metadata
-API_TITLE = 'MAX FASHION MNIST - Cloth Classification'
+API_TITLE = 'MAX FASHION MNIST - Fashion and Clothing items Classification'
 API_DESC = 'Classify cloths in the image'
 API_VERSION = '0.1'
 

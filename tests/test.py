@@ -28,7 +28,10 @@ def test_swagger():
 
     json = r.json()
     assert 'swagger' in json
-    assert json.get('info') and json.get('info').get('title') == 'MAX FASHION MNIST - Cloth Classification'
+    assert json.get('info') and json.get('info').get('title') == 'MAX FASHION ' \
+                                                                 'MNIST - Fashion ' \
+                                                                 'and Clothing items ' \
+                                                                 'Classification'
 
 
 def test_metadata():
