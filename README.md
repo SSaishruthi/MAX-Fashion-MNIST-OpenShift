@@ -149,7 +149,7 @@ All you need to start wrapping your model is pre-processing, prediction and post
              
 3. Predicted digit and its probability are the expected output. Add these two fields to `label_prediction` in `api/predict.py` 
   
- ```
+ ```python
  label_prediction = MAX_API.model('LabelPrediction', {
  'prediction': fields.Integer(required=True),
  'probability': fields.Float(required=True)
@@ -165,7 +165,7 @@ All you need to start wrapping your model is pre-processing, prediction and post
    _NOTE_: Prediction is followed by post-processing function which accepts only one input, 
            so create a dictionary to hold the results in case of multiple outputs returned from the function.
   
- ```
+ ```python
  with graph.as_default():
       set_session(sess)
       predict_result = self.model.predict(x)
@@ -180,7 +180,7 @@ All you need to start wrapping your model is pre-processing, prediction and post
   
    Output response has two fields `status` and `predictions` as defined in the `api/predict.py`. 
   
-  ```
+  ```python
    predict_response = MAX_API.model('ModelPredictResponse', {
      'status': fields.String(required=True, description='Response status message'),
      'predictions': fields.List(fields.Nested(label_prediction), description='Predicted labels and probabilities')
@@ -190,7 +190,7 @@ All you need to start wrapping your model is pre-processing, prediction and post
    Predictions is of type list and holds the model results. Create a dictionary inside a list with key names used in `label_prediction` (step 4) and update the
    model results accordingly.
    
-   ```
+   ```python
    # Extract prediction probability using `amax` and
    # digit prediction using `argmax`
    return [{'probability': np.amax(result),
@@ -199,7 +199,7 @@ All you need to start wrapping your model is pre-processing, prediction and post
 
 6. Assign the result from post-processing to the appropriate response field in `api/predict.py`.
 
-  ```
+  ```python
   # Assign result
   result['predictions'] = preds
   ```
