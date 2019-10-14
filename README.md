@@ -36,12 +36,12 @@ Each training and test example is assigned to one of the following labels:
 
 # Requirements
 
-1. Docker
-2. Python IDE or code editors
-3. Pre-trained model weights stored in a downloadable location
-4. List of required python packages
-5. Input pre-processing code
-6. Prediction/Inference code
+1. Docker
+2. Python IDE or code editors
+3. Pre-trained model weights stored in a downloadable location
+4. List of required python packages
+5. Input pre-processing code
+6. Prediction/Inference code
 7. Output variables
 8. Output post-processing code
 
