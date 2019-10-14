@@ -2,7 +2,7 @@
 
 # MAX-Fashion-MNIST
 
-Classify fashion and clothing items. 
+#### Classify fashion and clothing items. 
 
 ![mnist](samples/data.png)
 
