@@ -28,7 +28,7 @@ def test_swagger():
 
     json = r.json()
     assert 'swagger' in json
-    assert json.get('info') and json.get('info').get('title') == 'MAX MNIST-Digit Recognition'
+    assert json.get('info') and json.get('info').get('title') == 'MAX FASHION MNIST - Cloth Classification'
 
 
 def test_metadata():
@@ -40,14 +40,14 @@ def test_metadata():
 
     metadata = r.json()
     assert metadata['id'] == 'Image Classification'
-    assert metadata['name'] == 'MAX-MNIST'
-    assert metadata['description'] == 'Classify digits'
+    assert metadata['name'] == 'MAX-Fashion-MNIST'
+    assert metadata['description'] == 'Classify clothing and fashion items''
     assert metadata['license'] == 'Apache 2.0'
 
 
 def test_response():
     model_endpoint = 'http://localhost:5000/model/predict'
-    file_path = 'samples/image0.jpeg'
+    file_path = 'samples/1.jpeg'
 
     with open(file_path, 'rb') as file:
         file_form = {'file': (file_path, file, 'image/jpeg')}
@@ -60,7 +60,7 @@ def test_response():
     assert response['status'] == 'ok'
 
     # add sanity checks here
-    assert response['predictions'][0]['prediction'] == 8
+    assert response['predictions'][0]['prediction'] == 0
 
 
 if __name__ == '__main__':

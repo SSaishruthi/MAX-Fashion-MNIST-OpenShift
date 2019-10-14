@@ -1,14 +1,39 @@
 [![Build Status](https://travis-ci.org/SSaishruthi/max_mnist.svg?branch=master)](https://travis-ci.org/SSaishruthi/max_mnist)
 
-# MAX-MNIST
+# MAX-Fashion-MNIST
 
-Classify the handwritten digits. 
+Classify fashion and clothing items. 
 
-![mnist](samples/mnist.png)
+![mnist](samples/data.png)
 
-Data Source: http://yann.lecun.com/exdb/mnist/
+# Data Source: 
 
-Framework: Keras
+[Data Asset Exchange](https://developer.ibm.com/exchanges/data/)
+
+Curated free and open datasets under open data licensesfor enterprise data science.
+
+Link to download: https://developer.ibm.com/exchanges/data/all/fashion-mnist/
+
+# Framework
+
+Model is developed using Tensorflow framework
+
+# Labels
+Each training and test example is assigned to one of the following labels:
+
+| Label | Description |
+| --- | --- |
+| 0 | T-shirt/top |
+| 1 | Trouser |
+| 2 | Pullover |
+| 3 | Dress |
+| 4 | Coat |
+| 5 | Sandal |
+| 6 | Shirt |
+| 7 | Sneaker |
+| 8 | Bag |
+| 9 | Ankle boot |
+
 
 # Requirements
 
@@ -54,15 +79,7 @@ Update,
 For testing purpose, update as below:
 
 `model_bucket = https://github.com/SSaishruthi/max_mnist/raw/master/samples`
-`model_file = model_structure.h5`
-
-Calculate and add the MD5 hashes of the files that will be downloaded to md5sums.txt. 
-
-Here, hash will be calculated for `model_structure.h5` using the command:
-
-```
-md5sum model_structure.h5
-```
+`model_file = fashion_mnist.h5`
 
 ## Update Package Requirements
 
@@ -73,7 +90,6 @@ Following packages are required for this model:
    - numpy==1.14.1
    - Pillow==5.4.1
    - h5py==2.9.0
-   - keras==2.2.4
    - tensorflow==1.12.2
    
 
@@ -85,7 +101,7 @@ Following packages are required for this model:
   - API_DESC 
   - API_VERSION 
 
-2. Set `MODEL_NAME = 'model_structure.h5'`
+2. Set `MODEL_NAME = 'fashion_mnist.h5'`
 
    _NOTE_: Model files are always downloaded to `assets` folder inside docker.
 
@@ -105,30 +121,29 @@ All you need to start wrapping your model is pre-processing, prediction and post
 1. In `code/model.py`, load the model under `__init__()` method. 
   Here, saved model `.h5` can be loaded using the below command:
   
- ```
-  # load the model using `load_model` keras function
-  self.model = load_model(path)
-  self.model._make_predict_function()
- ```
-
-Reference:
-https://keras.io/getting-started/faq/
+ ```python
+ global sess
+ global graph
+ sess = tf.Session() 
+ graph = tf.get_default_graph()
+ set_session(sess)
+ self.model = tf.keras.models.load_model(path)
+```
 
 2. In `code/model.py`, pre-processing functions required for the input should get into the `_pre_process` function.
    Here, the input image needs to be read and converted into an array of acceptable shape.
   
-  ```
+  ```python
   # Open the input image
   img = Image.open(io.BytesIO(inp))
   print('reading image..', img.size)
   # Convert the PIL image instance into numpy array and
   # get in proper dimension.
-  image = img_to_array(img)
+  image = tf.keras.preprocessing.image.img_to_array(img)
   print('image array shape..', image.shape)
   image = np.expand_dims(image, axis=0)
-  return image
-  ```
-     
+  print('image array shape..', image.shape)
+```
   _NOTE_: Pre-processing is followed by prediction function which accepts only one input, 
           so create a dictionary to hold the return results if needed. In this case, we only have one input so we
           are good to go.
@@ -152,8 +167,11 @@ https://keras.io/getting-started/faq/
            so create a dictionary to hold the results in case of multiple outputs returned from the function.
   
  ```
-   predict_result = self.model.predict(x),
-   return predict_result
+ with graph.as_default():
+      set_session(sess)
+      predict_result = self.model.predict(x)
+      print(predict_result)
+      return predict_result
  ```
      
 5. Post-processing function will go under `_post_process` method in `code/model.py`.
@@ -217,13 +235,13 @@ $ docker run -it -p 5000:5000 max-mnist
 
  ```
     model_endpoint = 'http://localhost:5000/model/predict'
-    file_path = 'samples/image0.jpeg'
+    file_path = 'samples/1.jpeg'
  ```
 
-   - Check if the prediction is `8`.
+   - Check if the prediction is `0`.
 
  ```
-    assert response['predictions'][0]['prediction'] == 8
+    assert response['predictions'][0]['prediction'] == 0
  ```
 
 2. To enable Travis CI testing uncomment the docker commands and pytest command in `.travis.yml`.

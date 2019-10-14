@@ -32,16 +32,16 @@ class ModelWrapper(MAXModelWrapper):
 
     MODEL_META_DATA = {
         'id': 'Image Classification',
-        'name': 'MAX-MNIST',
-        'description': 'Classify cloths',
-        'type': 'Keras model',
-        'source': 'https://github.com/SSaishruthi/max_mnist',
+        'name': 'MAX-Fashion-MNIST',
+        'description': 'Classify clothing and fashion items',
+        'type': 'TensorFlow model',
+        'source': 'https://github.com/SSaishruthi/max_fashion_mnist',
         'license': 'Apache 2.0'
     }
 
     def __init__(self, path=DEFAULT_MODEL_PATH):
         logger.info('Loading model from: {}...'.format(path))
-        # Load the graph
+        # Load the model
         global sess
         global graph
         sess = tf.Session()
@@ -69,7 +69,6 @@ class ModelWrapper(MAXModelWrapper):
                  'prediction': np.argmax(result)}]
 
     def _predict(self, x):
-        print('prediction')
         with graph.as_default():
             set_session(sess)
             predict_result = self.model.predict(x)
