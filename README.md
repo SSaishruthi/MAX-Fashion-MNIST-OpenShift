@@ -8,7 +8,7 @@ Classify fashion and clothing items.
 
 # Data Source: 
 
-[Data Asset Exchange](https://developer.ibm.com/exchanges/data/)
+IBM Developer - [Data Asset Exchange](https://developer.ibm.com/exchanges/data/)
 
 Curated free and open datasets under open data licenses for enterprise data science.
 
@@ -78,6 +78,7 @@ Update,
 For testing purpose, update as below:
 
 `model_bucket = https://github.com/SSaishruthi/max_mnist/raw/master/samples`
+
 `model_file = fashion_mnist.h5`
 
 ## Update Package Requirements
