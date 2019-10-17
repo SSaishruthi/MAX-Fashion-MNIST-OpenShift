@@ -63,7 +63,7 @@ def test_response():
     assert response['status'] == 'ok'
 
     # add sanity checks here
-    assert response['predictions'][0]['prediction'] == 0
+    assert response['predictions'][0]['prediction'] == "T-shirt/top"
 
 
 if __name__ == '__main__':

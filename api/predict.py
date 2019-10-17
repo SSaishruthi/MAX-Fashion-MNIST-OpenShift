@@ -27,7 +27,7 @@ input_parser.add_argument('file', type=FileStorage, location='files', required=T
 
 # Creating a JSON response model: https://flask-restplus.readthedocs.io/en/stable/marshalling.html#the-api-model-factory
 label_prediction = MAX_API.model('LabelPrediction', {
-    'prediction': fields.Integer(required=True),
+    'prediction': fields.String(required=True),
     'probability': fields.Float(required=True)
 })
 
