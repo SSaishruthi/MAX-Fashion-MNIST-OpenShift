@@ -23,8 +23,22 @@ SWAGGER_UI_DOC_EXPANSION = 'none'
 
 # API metadata
 API_TITLE = 'MAX FASHION MNIST - Fashion and Clothing items Classification'
-API_DESC = 'Classify cloths in the image'
+API_DESC = 'Classify images of clothing pieces.'
 API_VERSION = '0.1'
 
 # Default model
 DEFAULT_MODEL_PATH = 'assets/fashion_mnist.h5'
+
+# Model metadata
+CLASS_DIGIT_TO_LABEL = {
+    0: "T-shirt/top",
+    1:  "Trouser",
+    2: "Pullover",
+    3: "Dress",
+    4: "Coat",
+    5: "Sandal",
+    6: "Shirt",
+    7: "Sneaker",
+    8: "Bag",
+    9: "Ankle boot"
+}

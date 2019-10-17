@@ -23,7 +23,7 @@ import tensorflow as tf
 from tensorflow.python.keras.backend import set_session
 
 import logging
-from config import DEFAULT_MODEL_PATH
+from config import DEFAULT_MODEL_PATH, CLASS_DIGIT_TO_LABEL
 
 logger = logging.getLogger()
 
@@ -53,24 +53,20 @@ class ModelWrapper(MAXModelWrapper):
     def _pre_process(self, inp):
         # Open the input image
         img = Image.open(io.BytesIO(inp))
-        print('reading image..', img.size)
         # Convert the PIL image instance into numpy array and
         # get in proper dimension.
         image = tf.keras.preprocessing.image.img_to_array(img)
-        print('image array shape..', image.shape)
         image = np.expand_dims(image, axis=0)
-        print('image array shape..', image.shape)
         return image
 
     def _post_process(self, result):
         # Extract prediction probability using `amax` and
         # digit prediction using `argmax`
         return [{'probability': np.amax(result),
-                 'prediction': np.argmax(result)}]
+                 'prediction': CLASS_DIGIT_TO_LABEL[np.argmax(result)]}]
 
     def _predict(self, x):
         with graph.as_default():
             set_session(sess)
             predict_result = self.model.predict(x)
-            print(predict_result)
             return predict_result
