@@ -152,7 +152,7 @@ All you need to start wrapping your model is pre-processing, prediction and post
   
  ```python
  label_prediction = MAX_API.model('LabelPrediction', {
- 'prediction': fields.Integer(required=True),
+ 'prediction': fields.String(required=True),
  'probability': fields.Float(required=True)
  })
  ```
@@ -170,7 +170,6 @@ All you need to start wrapping your model is pre-processing, prediction and post
  with graph.as_default():
       set_session(sess)
       predict_result = self.model.predict(x)
-      print(predict_result)
       return predict_result
  ```
      
@@ -187,15 +186,39 @@ All you need to start wrapping your model is pre-processing, prediction and post
      'predictions': fields.List(fields.Nested(label_prediction), description='Predicted labels and probabilities')
    })
   ```
+
+
+    In order to make sense of the predicted class digits, we will add the `CLASS_DIGIT_TO_LABEL` variable to the `config.py` file. This will serve as a mapping between class digits and labels to make the output more understandable to the user. 
+    
+    ```python
+    CLASS_DIGIT_TO_LABEL = {
+      0: "T-shirt/top",
+      1: "Trouser",
+      2: "Pullover",
+      3: "Dress",
+      4: "Coat",
+      5: "Sandal",
+      6: "Shirt",
+      7: "Sneaker",
+      8: "Bag",
+      9: "Ankle boot"
+    }
+    ```
+
+   We will import this map at the top of the `model.py` file.
+
+   ```python
+   from config import DEFAULT_MODEL_PATH, CLASS_DIGIT_TO_LABEL
+   ```
   
-   Predictions is of type list and holds the model results. Create a dictionary inside a list with key names used in `label_prediction` (step 4) and update the
-   model results accordingly.
+   Our model output is of the list type and holds the predicted probabilities. The class with the highest probability will be assigned to the input image. Here, we will use our imported `CLASS_DIGIT_TO_LABEL` variable to map the class digit to the corresponding label.
+
    
    ```python
    # Extract prediction probability using `amax` and
    # digit prediction using `argmax`
    return [{'probability': np.amax(result),
-            'prediction': np.argmax(result)}]
+            'prediction': CLASS_DIGIT_TO_LABEL[np.argmax(result)]}]
    ```
 
 6. Assign the result from post-processing to the appropriate response field in `api/predict.py`.
@@ -225,7 +248,7 @@ To run the docker image, which automatically starts the model serving API, run:
 $ docker run -it -p 5000:5000 max-mnist
 ```
 
-## BONUS - Update Test Script
+## (Optional) Update Test Script
 
 1. Add a few integration tests using pytest in tests/test.py to check that your model works. 
 
@@ -233,15 +256,15 @@ $ docker run -it -p 5000:5000 max-mnist
 
    - Update model endpoint and sample input file path.
 
- ```
+ ```python
     model_endpoint = 'http://localhost:5000/model/predict'
     file_path = 'samples/1.jpeg'
  ```
 
-   - Check if the prediction is `0`.
+   - Check if the prediction is `T-shirt/top`.
 
- ```
-    assert response['predictions'][0]['prediction'] == 0
+ ```python
+    assert response['predictions'][0]['prediction'] == "T-shirt/top"
  ```
 
 2. To enable Travis CI testing uncomment the docker commands and pytest command in `.travis.yml`.
