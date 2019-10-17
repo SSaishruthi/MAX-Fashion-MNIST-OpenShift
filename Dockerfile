@@ -37,7 +37,7 @@ COPY . /workspace
 
 RUN if [ "$use_pre_trained_model" = "true" ] ; then \
       # validate downloaded pre-trained model assets
-      echo "Using pre-trained weights" ; \
+      md5sum -c md5sums.txt ; \
     else \
       # rename the directory that contains the custom-trained model artifact
       if [ -d "./custom_assets/" ] ; then \
