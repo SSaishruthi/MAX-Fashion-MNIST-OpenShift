@@ -69,7 +69,7 @@ $ git clone https://github.com/......
 
 ## Update Dockerfile
 
-Update,
+Open the Dockerfile file and update the following:
 
 - `ARG model_bucket=` with the link to the model file public storage that can be downloaded
 
