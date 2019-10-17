@@ -16,7 +16,7 @@ Link to download: https://developer.ibm.com/exchanges/data/all/fashion-mnist/
 
 # Framework
 
-Model is developed using Tensorflow framework
+The model is developed using the Tensorflow framework.
 
 # Labels
 Each training and test example is assigned to one of the following labels:
@@ -90,7 +90,7 @@ Following packages are required for this model:
    - numpy==1.14.1
    - Pillow==5.4.1
    - h5py==2.9.0
-   - tensorflow==1.12.2
+   - tensorflow==1.14
    
 
 ## Update API and Model Metadata
@@ -157,7 +157,7 @@ All you need to start wrapping your model is pre-processing, prediction and post
  })
  ```
  
- _NOTE_: These fields can very depending on the model.
+ _NOTE_: These fields can vary depending on the model.
  
 4. Place the prediction code under `_predict` method in `code/model.py`.
    In the above step, we have defined two outputs. Now we need to extract these two results 
