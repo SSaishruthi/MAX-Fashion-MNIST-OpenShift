@@ -118,8 +118,8 @@ Following packages are required for this model:
 
 All you need to start wrapping your model is pre-processing, prediction and post-processing code.
   
-1. In `core/model.py`, load the model under the `__init__()` method of the `ModelWrapper` clas. 
-  Here, the saved model (`.h5` format) can be loaded using the below command:
+1. In `core/model.py`, load the model under the `__init__()` method of the `ModelWrapper` class. 
+  Here, the saved model (`.h5` format) can be loaded using the command below.
   
     ```python
     global sess
