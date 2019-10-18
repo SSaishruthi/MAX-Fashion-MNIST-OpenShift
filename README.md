@@ -212,10 +212,10 @@ All you need to start wrapping your model is pre-processing, prediction and post
 
 6. Finally, assign the output from the post-processing step to the appropriate response field in `api/predict.py` to link the processed model output to the API.
 
-  ```python
-  # Assign result
-  result['predictions'] = preds
-  ```
+   ```python
+   # Assign result
+   result['predictions'] = preds
+   ```
 
 ## Build the model Docker image
 
@@ -245,15 +245,15 @@ $ docker run -it -p 5000:5000 max-mnist
 
    - Update model endpoint and sample input file path.
 
- ```python
-    model_endpoint = 'http://localhost:5000/model/predict'
-    file_path = 'samples/1.jpeg'
- ```
+      ```python
+      model_endpoint = 'http://localhost:5000/model/predict'
+      file_path = 'samples/1.jpeg'
+      ```
 
    - Check if the prediction is `T-shirt/top`.
 
- ```python
-    assert response['predictions'][0]['prediction'] == "T-shirt/top"
- ```
+      ```python
+      assert response['predictions'][0]['prediction'] == "T-shirt/top"
+      ```
 
 3. To enable Travis CI testing uncomment the docker commands and pytest command in `.travis.yml`.
