@@ -164,6 +164,7 @@ All you need to start wrapping your model is pre-processing, prediction and post
 
     ```python
     import numpy as np
+    from PIL import Image
     ```
  
 3. Following pre-processing, we will feed the input to the model. Place the inference code under the `_predict` method in `core/model.py`. The model will return a list of class probabilities, corresponding to the likelihood of the input image to belong to respective class. There are 10 classes (digit 0 to 9), so `predict_result` will contain 10 values.
