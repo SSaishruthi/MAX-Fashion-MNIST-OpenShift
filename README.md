@@ -77,9 +77,11 @@ Update,
    
 For testing purpose, update as below:
 
-`model_bucket = https://max-assets-dev.s3.us-south.cloud-object-storage.appdomain.cloud/max-demo/1.0.0`
+```docker
+ARG model_bucket=https://max-assets-dev.s3.us-south.cloud-object-storage.appdomain.cloud/max-demo/1.0.0
 
-`model_file = assets.tar.gz`
+ARG model_file=assets.tar.gz
+```
 
 ## Update Package Requirements
 
@@ -87,10 +89,12 @@ Add required python packages for running the model prediction to requirements.tx
 
 Following packages are required for this model:
 
-   - numpy==1.14.1
-   - Pillow==5.4.1
-   - h5py==2.9.0
-   - tensorflow==1.14
+```
+numpy==1.14.1
+Pillow==5.4.1
+h5py==2.9.0
+tensorflow==1.14
+```
    
 
 ## Update API and Model Metadata
@@ -114,12 +118,13 @@ Following packages are required for this model:
    - Source to the model belongs
    - Model license (e.g. Apache 2.0)
    
-## Update Scripts
+## Update Inference Code
 
 All you need to start wrapping your model is pre-processing, prediction and post-processing code.
   
 1. In `core/model.py`, load the model under the `__init__()` method of the `ModelWrapper` class. 
-  Here, the saved model (`.h5` format) can be loaded using the command below.
+   
+    Here, the saved model (`.h5` format) can be loaded using the command below.
   
     ```python
     global sess
@@ -130,8 +135,17 @@ All you need to start wrapping your model is pre-processing, prediction and post
     self.model = tf.keras.models.load_model(path)
     ```
 
+    In order for the above to function, we will have to add the following dependency to the top of the file.
+
+    ```python
+    import tensorflow as tf
+    from tf.keras.backend import set_session
+    ```
+
+
 2. In `core/model.py`, input pre-processing functions should be placed under the `_pre_process` function.
-   Here, the input image needs to be read and converted into an array of acceptable shape.
+   
+    Here, the input image needs to be read and converted into an array of acceptable shape.
   
     ```python
     # Open the input image
@@ -143,6 +157,13 @@ All you need to start wrapping your model is pre-processing, prediction and post
     print('image array shape..', image.shape)
     image = np.expand_dims(image, axis=0)
     print('image array shape..', image.shape)
+    return image
+    ```
+
+    In order for the above to function, we will have to add the following dependency to the top of the file.
+
+    ```python
+    import numpy as np
     ```
  
 3. Following pre-processing, we will feed the input to the model. Place the inference code under the `_predict` method in `core/model.py`. The model will return a list of class probabilities, corresponding to the likelihood of the input image to belong to respective class. There are 10 classes (digit 0 to 9), so `predict_result` will contain 10 values.
