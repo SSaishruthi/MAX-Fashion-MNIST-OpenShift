@@ -198,7 +198,7 @@ All you need to start wrapping your model is pre-processing, prediction and post
     })
     ```
 
-    In addition, the output response has two fields `status` and `predictions` need to be updated as follows. 
+    In addition, the output response has two fields `status` and `predictions` need to be updated as follows. This defines the format the API expects the output to be in.
   
     ```python
     predict_response = MAX_API.model('ModelPredictResponse', {
