@@ -131,7 +131,7 @@ Now, combine these two into the following format:
 
 `http://[EXTERNAL-IP]:[PORT-NUMBER]`
 
-Navigate there and you should see the API of your application. Congratulations, you have completed the harest part!
+Navigate there and you should see the API of your application. Congratulations!
 
 _To learn more about scaling this cluster and advanced configuration such as LoadBalancers or Ingress, feel free to ask us about more advanced resources._
 
