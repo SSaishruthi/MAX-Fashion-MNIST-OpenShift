@@ -128,94 +128,94 @@ All you need to start wrapping your model is pre-processing, prediction and post
     graph = tf.get_default_graph()
     set_session(sess)
     self.model = tf.keras.models.load_model(path)
-   ```
+    ```
 
 2. In `core/model.py`, input pre-processing functions should be placed under the `_pre_process` function.
    Here, the input image needs to be read and converted into an array of acceptable shape.
   
-   ```python
-   # Open the input image
-   img = Image.open(io.BytesIO(inp))
-   print('reading image..', img.size)
-   # Convert the PIL image instance into numpy array and
-   # get in proper dimension.
-   image = tf.keras.preprocessing.image.img_to_array(img)
-   print('image array shape..', image.shape)
-   image = np.expand_dims(image, axis=0)
-   print('image array shape..', image.shape)
-   ```
+    ```python
+    # Open the input image
+    img = Image.open(io.BytesIO(inp))
+    print('reading image..', img.size)
+    # Convert the PIL image instance into numpy array and
+    # get in proper dimension.
+    image = tf.keras.preprocessing.image.img_to_array(img)
+    print('image array shape..', image.shape)
+    image = np.expand_dims(image, axis=0)
+    print('image array shape..', image.shape)
+    ```
  
 3. Following pre-processing, we will feed the input to the model. Place the inference code under the `_predict` method in `core/model.py`. The model will return a list of class probabilities, corresponding to the likelihood of the input image to belong to respective class. There are 10 classes (digit 0 to 9), so `predict_result` will contain 10 values.
   
-   ```python
-   with graph.as_default():
+    ```python
+    with graph.as_default():
       set_session(sess)
       predict_result = self.model.predict(x)
       return predict_result
-   ```
+    ```
      
 4. Following inference, a post-processing step is needed to reformat the output of the `_predict` method. It's important to make sense of the results before returning the output to the user. Any post-processing code will go under the `_post_process` method in `core/model.py`.
 
     In order to make sense of the predicted class digits, we will add the `CLASS_DIGIT_TO_LABEL` variable to the `config.py` file. This will serve as a mapping between class digits and labels to make the output more understandable to the user. 
-    
-   ```python
-   CLASS_DIGIT_TO_LABEL = {
-   0: "T-shirt/top",
-   1: "Trouser",
-   2: "Pullover",
-   3: "Dress",
-   4: "Coat",
-   5: "Sandal",
-   6: "Shirt",
-   7: "Sneaker",
-   8: "Bag",
-   9: "Ankle boot"
-   }
-   ```
 
-   We will import this map at the top of the `model.py` file.
+    ```python
+    CLASS_DIGIT_TO_LABEL = {
+    0: "T-shirt/top",
+    1: "Trouser",
+    2: "Pullover",
+    3: "Dress",
+    4: "Coat",
+    5: "Sandal",
+    6: "Shirt",
+    7: "Sneaker",
+    8: "Bag",
+    9: "Ankle boot"
+    }
+    ```
 
-   ```python
-   from config import DEFAULT_MODEL_PATH, CLASS_DIGIT_TO_LABEL
-   ```
-  
-   The class with the highest probability will be assigned to the input image. Here, we will use our imported `CLASS_DIGIT_TO_LABEL` variable to map the class digit to the corresponding label.
-   
-   
-   ```python
-   # Extract prediction probability using `amax` and
-   # digit prediction using `argmax`
-   return [{'probability': np.amax(result),
+    We will import this map at the top of the `model.py` file.
+
+    ```python
+    from config import DEFAULT_MODEL_PATH, CLASS_DIGIT_TO_LABEL
+    ```
+
+    The class with the highest probability will be assigned to the input image. Here, we will use our imported `CLASS_DIGIT_TO_LABEL` variable to map the class digit to the corresponding label.
+
+
+    ```python
+    # Extract prediction probability using `amax` and
+    # digit prediction using `argmax`
+    return [{'probability': np.amax(result),
             'prediction': CLASS_DIGIT_TO_LABEL[np.argmax(result)]}]
-   ```
+    ```
    
 5. The predicted class and it's probability are the expected output. In order to return these values in the API, we need to add these two fields to `label_prediction` in `api/predict.py`.
   
-   ```python
-   label_prediction = MAX_API.model('LabelPrediction', {
-   'prediction': fields.String(required=True),
-   'probability': fields.Float(required=True)
-   })
-   ```
-   
-   In addition, the output response has two fields `status` and `predictions` need to be updated as follows. 
+    ```python
+    label_prediction = MAX_API.model('LabelPrediction', {
+    'prediction': fields.String(required=True),
+    'probability': fields.Float(required=True)
+    })
+    ```
+
+    In addition, the output response has two fields `status` and `predictions` need to be updated as follows. 
   
-   ```python
-   predict_response = MAX_API.model('ModelPredictResponse', {
-     'status': fields.String(required=True, description='Response status message'),
-     'predictions': fields.List(fields.Nested(label_prediction), description='Predicted labels and probabilities')
-   })
-   ```
+    ```python
+    predict_response = MAX_API.model('ModelPredictResponse', {
+      'status': fields.String(required=True, description='Response status message'),
+      'predictions': fields.List(fields.Nested(label_prediction), description='Predicted labels and probabilities')
+    })
+    ```
  
-   _NOTE_: These fields can vary depending on the model.
+    _NOTE_: These fields can vary depending on the model.
    
 
 6. Finally, assign the output from the post-processing step to the appropriate response field in `api/predict.py` to link the processed model output to the API.
 
-   ```python
-   # Assign result
-   result['predictions'] = preds
-   ```
+    ```python
+    # Assign result
+    result['predictions'] = preds
+    ```
 
 ## Build the model Docker image
 
