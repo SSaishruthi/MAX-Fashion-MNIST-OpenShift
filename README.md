@@ -139,7 +139,7 @@ All you need to start wrapping your model is pre-processing, prediction and post
 
     ```python
     import tensorflow as tf
-    from tf.keras.backend import set_session
+    from tensorflow.keras.backend import set_session
     ```
 
 
@@ -163,6 +163,7 @@ All you need to start wrapping your model is pre-processing, prediction and post
     In order for the above to function, we will have to add the following dependency to the top of the file.
 
     ```python
+    import io
     import numpy as np
     from PIL import Image
     ```
@@ -182,20 +183,20 @@ All you need to start wrapping your model is pre-processing, prediction and post
 
     ```python
     CLASS_DIGIT_TO_LABEL = {
-    0: "T-shirt/top",
-    1: "Trouser",
-    2: "Pullover",
-    3: "Dress",
-    4: "Coat",
-    5: "Sandal",
-    6: "Shirt",
-    7: "Sneaker",
-    8: "Bag",
-    9: "Ankle boot"
+      0: "T-shirt/top",
+      1: "Trouser",
+      2: "Pullover",
+      3: "Dress",
+      4: "Coat",
+      5: "Sandal",
+      6: "Shirt",
+      7: "Sneaker",
+      8: "Bag",
+      9: "Ankle boot"
     }
     ```
 
-    We will import this map at the top of the `model.py` file.
+    We will import this map at the top of the `core/model.py` file.
 
     ```python
     from config import DEFAULT_MODEL_PATH, CLASS_DIGIT_TO_LABEL
@@ -215,8 +216,8 @@ All you need to start wrapping your model is pre-processing, prediction and post
   
     ```python
     label_prediction = MAX_API.model('LabelPrediction', {
-    'prediction': fields.String(required=True),
-    'probability': fields.Float(required=True)
+      'prediction': fields.String(required=True),
+      'probability': fields.Float(required=True)
     })
     ```
 
@@ -240,6 +241,14 @@ All you need to start wrapping your model is pre-processing, prediction and post
     ```
 
 ## Build the model Docker image
+
+When building the Dockerfile, the integrity of the downloaded model file will be verified. If you're using the model file provided by us, the checksum in the `md5sums.txt` file has to be replaced with the following:
+
+```
+b44f32e1ca3392312bc9d9f8a2ada8a1  assets/fashion_mnist.h5
+```
+
+If you're using your own file, please generate the md5 checksum for your own model file, and replace it with the value on the left. If you want to skip this step, feel free to remove the entire RUN-statement from the Dockerfile.
 
 To build the docker image locally, run:
 
@@ -270,6 +279,10 @@ $ docker run -it -p 5000:5000 max-mnist
       ```python
       model_endpoint = 'http://localhost:5000/model/predict'
       file_path = 'samples/1.jpeg'
+
+      with open(file_path, 'rb') as file:
+        file_form = {'file': (file_path, file, 'image/jpeg')}
+        r = requests.post(url=model_endpoint, files=file_form)
       ```
 
    - Check if the prediction is `T-shirt/top`.
