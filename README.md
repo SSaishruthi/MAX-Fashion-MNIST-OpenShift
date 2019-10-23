@@ -5,7 +5,7 @@
 #### Classify fashion and clothing items. 
 
 <div align="center">
-  <img src="https://github.com/SSaishruthi/max-fashion-mnist/raw/master/samples/data.png" height="100" width="100">
+  <img src="https://github.com/SSaishruthi/max-fashion-mnist/raw/master/samples/data.png" height="400" width="400">
 </div>
 
 # Data Source: 
