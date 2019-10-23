@@ -4,7 +4,9 @@
 
 #### Classify fashion and clothing items. 
 
-![mnist](samples/data.png)
+<div align="center">
+  <img src="https://github.com/SSaishruthi/max-fashion-mnist/raw/master/samples/data.png" height="100" width="100">
+</div>
 
 # Data Source: 
 
@@ -16,7 +18,7 @@ Link to download: https://developer.ibm.com/exchanges/data/all/fashion-mnist/
 
 # Framework
 
-The model is developed using the Tensorflow framework.
+The model is developed using the [Tensorflow](https://www.tensorflow.org/) framework.
 
 # Labels
 Each training and test example is assigned to one of the following labels:
@@ -72,15 +74,23 @@ $ git clone https://github.com/......
 Open the Dockerfile file and update the following:
 
 - `ARG model_bucket=` with the link to the model file public storage that can be downloaded
+   
+   For demo purpose, we have uploaded the trained model weights to [IBM Cloud Object Storage](https://www.ibm.com/cloud/object-storage)
 
 - `ARG model_file=` with the model file name. 
    
-For testing purpose, update as below:
+   For testing purpose, update as below:
 
 ```docker
 ARG model_bucket=https://max-assets-dev.s3.us-south.cloud-object-storage.appdomain.cloud/max-demo/1.0.0
 
 ARG model_file=assets.tar.gz
+```
+
+-  When building the Dockerfile, the integrity of the downloaded model file will be verified. If you're using the model file provided by us, the checksum in the `md5sums.txt` file has to be replaced with the following:
+
+```
+b44f32e1ca3392312bc9d9f8a2ada8a1  assets/fashion_mnist.h5
 ```
 
 ## Update Package Requirements
@@ -241,12 +251,6 @@ All you need to start wrapping your model is pre-processing, prediction and post
     ```
 
 ## Build the model Docker image
-
-When building the Dockerfile, the integrity of the downloaded model file will be verified. If you're using the model file provided by us, the checksum in the `md5sums.txt` file has to be replaced with the following:
-
-```
-b44f32e1ca3392312bc9d9f8a2ada8a1  assets/fashion_mnist.h5
-```
 
 If you're using your own file, please generate the md5 checksum for your own model file, and replace it with the value on the left. If you want to skip this step, feel free to remove the entire RUN-statement from the Dockerfile.
 
