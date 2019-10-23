@@ -59,6 +59,8 @@ Each training and test example is assigned to one of the following labels:
 
 ## Fork the Template and Clone the Repository
 
+### Users with GitHub account
+
 1. Login to GitHub and go to [MAX Skeleton](https://github.com/IBM/MAX-Skeleton)
 
 2. Click on `Use this template` and provide a name for the repo.
@@ -67,6 +69,15 @@ Each training and test example is assigned to one of the following labels:
 
 ```bash
 $ git clone https://github.com/......
+
+```
+
+### Users without Github account
+
+1. Clone the [MAX Skeleton](https://github.com/IBM/MAX-Skeleton) repository using the below the command:
+
+```bash
+$ git clone https://github.com/IBM/MAX-Skeleton.git
 ```
 
 ## Update Dockerfile
