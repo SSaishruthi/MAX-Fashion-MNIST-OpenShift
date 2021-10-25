@@ -85,24 +85,10 @@ $ git clone https://github.com/IBM/MAX-Skeleton.git
 Open the Dockerfile file and update the following:
 
 - `ARG model_bucket=` with the link to the model file public storage that can be downloaded
-   
-   For demo purpose, we have uploaded the trained model weights to [IBM Cloud Object Storage](https://www.ibm.com/cloud/object-storage)
 
 - `ARG model_file=` with the model file name. 
    
-   For testing purpose, update as below:
-
-```docker
-ARG model_bucket=https://max-assets-dev.s3.us-south.cloud-object-storage.appdomain.cloud/max-demo/1.0.0
-
-ARG model_file=assets.tar.gz
-```
-
--  When building the Dockerfile, the integrity of the downloaded model file will be verified. If you're using the model file provided by us, the checksum in the `md5sums.txt` file has to be replaced with the following:
-
-```
-b44f32e1ca3392312bc9d9f8a2ada8a1  assets/fashion_mnist.h5
-```
+   For demo purpose, we have uploaded the trained model weights to the repo. So, ignoring here. 
 
 ## Update Package Requirements
 
@@ -111,10 +97,16 @@ Add required python packages for running the model prediction to requirements.tx
 Following packages are required for this model:
 
 ```
-numpy==1.14.1
-Pillow==5.4.1
-h5py==2.9.0
-tensorflow==1.14
+numpy
+Pillow
+h5py
+tensorflow
+maxfw
+Werkzeug==0.16.1
+flask-cors==3.0.10
+flask-restx==0.3.0
+flask>=1.1.2,<2.0
+flask-restplus
 ```
    
 
@@ -126,7 +118,7 @@ tensorflow==1.14
    - API_DESC 
    - API_VERSION 
 
-2. Set `MODEL_PATH = 'asssets/fashion_mnist.h5'`
+2. Set `DEFAULT_MODEL_PATH = 'samples/tf_trained_model.h5'`
 
    _NOTE_: Model files are always downloaded to `assets` folder inside docker.
 
@@ -148,11 +140,6 @@ All you need to start wrapping your model is pre-processing, prediction and post
     Here, the saved model (`.h5` format) can be loaded using the command below.
   
     ```python
-    global sess
-    global graph
-    sess = tf.Session() 
-    graph = tf.get_default_graph()
-    set_session(sess)
     self.model = tf.keras.models.load_model(path)
     ```
 
@@ -160,7 +147,6 @@ All you need to start wrapping your model is pre-processing, prediction and post
 
     ```python
     import tensorflow as tf
-    from tensorflow.keras.backend import set_session
     ```
 
 
@@ -192,10 +178,10 @@ All you need to start wrapping your model is pre-processing, prediction and post
 3. Following pre-processing, we will feed the input to the model. Place the inference code under the `_predict` method in `core/model.py`. The model will return a list of class probabilities, corresponding to the likelihood of the input image to belong to respective class. There are 10 classes (digit 0 to 9), so `predict_result` will contain 10 values.
   
     ```python
-    with graph.as_default():
-      set_session(sess)
-      predict_result = self.model.predict(x)
-      return predict_result
+    probability_model = tf.keras.Sequential([self.model, 
+                                         tf.keras.layers.Softmax()])
+    predict_result = probability_model.predict(x)
+    return predict_result
     ```
      
 4. Following inference, a post-processing step is needed to reformat the output of the `_predict` method. It's important to make sense of the results before returning the output to the user. Any post-processing code will go under the `_post_process` method in `core/model.py`.
