@@ -20,7 +20,6 @@ from PIL import Image
 import numpy as np
 import io
 import tensorflow as tf
-from tensorflow.python.keras.backend import set_session
 
 import logging
 from config import DEFAULT_MODEL_PATH, CLASS_DIGIT_TO_LABEL
@@ -42,11 +41,6 @@ class ModelWrapper(MAXModelWrapper):
     def __init__(self, path=DEFAULT_MODEL_PATH):
         logger.info('Loading model from: {}...'.format(path))
         # Load the model
-        # global sess
-        # global graph
-        # sess = tf.Session()
-        # graph = tf.get_default_graph()
-        # set_session(sess)
         self.model = tf.keras.models.load_model(path)
         logger.info('Loaded model')
 
