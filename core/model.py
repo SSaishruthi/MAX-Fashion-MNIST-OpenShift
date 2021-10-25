@@ -42,11 +42,11 @@ class ModelWrapper(MAXModelWrapper):
     def __init__(self, path=DEFAULT_MODEL_PATH):
         logger.info('Loading model from: {}...'.format(path))
         # Load the model
-        global sess
-        global graph
-        sess = tf.Session()
-        graph = tf.get_default_graph()
-        set_session(sess)
+        # global sess
+        # global graph
+        # sess = tf.Session()
+        # graph = tf.get_default_graph()
+        # set_session(sess)
         self.model = tf.keras.models.load_model(path)
         logger.info('Loaded model')
 
@@ -66,7 +66,7 @@ class ModelWrapper(MAXModelWrapper):
                  'prediction': CLASS_DIGIT_TO_LABEL[np.argmax(result)]}]
 
     def _predict(self, x):
-        with graph.as_default():
-            set_session(sess)
-            predict_result = self.model.predict(x)
-            return predict_result
+        probability_model = tf.keras.Sequential([self.model, 
+                                         tf.keras.layers.Softmax()])
+        predict_result = probability_model.predict(x)
+        return predict_result
